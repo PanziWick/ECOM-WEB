@@ -28,8 +28,8 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Optional<Product> getProductByID(Long id){
-        return productRepository.findById(id);
+    public Optional<Product> getProductByID(Long productId){
+        return productRepository.findById(productId);
     }
 
     public List<Product> getProductsByCategory(Long categoryId){
@@ -55,7 +55,7 @@ public class ProductService {
             productRepository.save((product));
             return ResponseEntity.ok(new ApiResponse<>(201, "Product Added", productList));
         }catch (Exception e){
-            return ResponseEntity.status(500).body(new ApiResponse<>(500, "server error", new ArrayList<>()));
+            return ResponseEntity.status(500).body(new ApiResponse<>(500, e.getMessage(), new ArrayList<>()));
         }
     }
 
@@ -98,8 +98,5 @@ public class ProductService {
     private boolean isProductDuplicate(String productName) {
         return productRepository.existsByName(productName);
     }
-
-    // get category id from category tbl related to given category name
-    // get the
 
 }

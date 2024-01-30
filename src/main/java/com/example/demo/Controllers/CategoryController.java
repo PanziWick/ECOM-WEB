@@ -34,7 +34,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<List<Category>>> getCategoryById(Long id) {
+    public ResponseEntity<ApiResponse<List<Category>>> getCategoryById(@PathVariable Long id) {
         try {
             List<Category> categories = categoryService.getCategoryByID(id);
             return ResponseEntity.ok(new ApiResponse<>(200, "Category retrieved",categories));

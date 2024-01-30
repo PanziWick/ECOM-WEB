@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> getCustomersByName(String name);
 
-    boolean existsByName(String name);
+    boolean existsByContactNumber(double contactNumber);
 }

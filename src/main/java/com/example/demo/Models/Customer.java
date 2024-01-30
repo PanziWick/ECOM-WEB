@@ -15,7 +15,7 @@ public class Customer {
     private Long id;
     private String name;
     private String email;
-    private int contactNumber;
+    private double contactNumber;
     private String address;
 
     private Boolean isActive;

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/product")
 @RequiredArgsConstructor
 public class ProductController {
     @Autowired
@@ -34,18 +34,33 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<List<Product>>> getProductById(Long id) {
+    @GetMapping("/{productId}")
+    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
         try {
-            List<Product> product = productService.getProductByID(id).stream().toList();
-            return ResponseEntity.ok(new ApiResponse<>(200, "Product retrieved", product));
+            //List<Product> product = productService.getProductByID(id).stream().toList();
+            return ResponseEntity.ok(new ApiResponse<>(200, "Product retrieved", productService.getProductByID(productId)));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ApiResponse<>(500, "An error occured while retrieving the products", new ArrayList<>()));
+            return ResponseEntity.status(500).body(new ApiResponse<>(500, e.getMessage(), new ArrayList<>()));
         }
     }
 
-    @GetMapping("/category")
-    public ResponseEntity<ApiResponse<List<Product>>> getProductsByCategory(@RequestParam String categoryName) {
+    //To check the End-Point from request parameter(params)
+    @GetMapping("/getcategory")
+    public ResponseEntity<ApiResponse<List<Product>>> getProductsByCategory1(@RequestParam(name = "categoryName") String categoryName) {
+        try {
+            var category = categoryService.getCategoryByName(categoryName);
+            List<Product> products = productService.getProductsByCategory(category.get().getId()).stream().toList();
+            return ResponseEntity.ok(new ApiResponse<>(200, "Product retrieved", products));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ApiResponse<>(500,
+                    e.getMessage().toString(),
+                    new ArrayList<>()));
+        }
+    }
+
+    //To check the End-Point from Path Variable(URL)
+    @GetMapping("/getcategory/{categoryName}")
+    public ResponseEntity<ApiResponse<List<Product>>> getProductsByCategory2(@PathVariable String categoryName) {
         try {
             var category = categoryService.getCategoryByName(categoryName);
             List<Product> products = productService.getProductsByCategory(category.get().getId()).stream().toList();
@@ -62,7 +77,7 @@ public class ProductController {
         try {
             return productService.addNewProducts(productDTO);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ApiResponse<>(500, "An error occured while retrieving the products", new ArrayList<>()));
+            return ResponseEntity.status(500).body(new ApiResponse<>(500, "An error occurred while retrieving the products", new ArrayList<>()));
         }
     }
 
